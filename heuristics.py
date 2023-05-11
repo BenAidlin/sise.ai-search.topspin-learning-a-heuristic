@@ -33,7 +33,7 @@ class AdvanceHeuristic:
         return h
 
 
-class LearnedHeuristic
+class LearnedHeuristic:
 
     def __init__(self, n=11, k=4):
         self._n = n
