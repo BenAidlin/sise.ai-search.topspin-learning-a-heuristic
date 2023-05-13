@@ -28,3 +28,12 @@ class TopSpinState:
     
     def get_father_state(self):
         return self.father_state
+    
+    def __lt__(self, other):
+        return True
+    
+    def __eq__(self, other):
+        return self.get_state_as_list() == other.get_state_as_list()
+    
+    def __hash__(self):
+        return hash(tuple(self.state))

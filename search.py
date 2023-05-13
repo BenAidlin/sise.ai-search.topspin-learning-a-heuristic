@@ -5,15 +5,24 @@ def search(start, priority_function, heuristic_function):
     closed_list = set()
 
     g_values = {start: 0}
-    f_values = {start: heuristic_function.get_h_value(start)}
+    f_values = {start: heuristic_function(start)}
 
     heapq.heappush(open_list, (f_values[start], start))
+
+    def create_solution(end_state):
+        sol = []
+        f = end_state
+        while f is not None:
+            sol.append(f.get_state_as_list())
+            f = f.get_father_state()
+        return sol
+
 
     while open_list:
         f_current, current = heapq.heappop(open_list)
 
         if current.is_goal():
-            return current
+            return create_solution(current), current
 
         closed_list.add(current)
 
@@ -25,7 +34,6 @@ def search(start, priority_function, heuristic_function):
             # not seen before, or seen with higher g value
             if neighbor not in g_values or tentative_g < g_values[neighbor]:
                 g_values[neighbor] = tentative_g
-                f_values[neighbor] = priority_function(tentative_g, heuristic_function.get_h_value(neighbor))
-                heapq.heappush(open_list, (f_values[neighbor], neighbor))
-
+                f_values[neighbor] = priority_function(tentative_g, heuristic_function(neighbor))
+                heapq.heappush(open_list, (f_values[neighbor], neighbor))                
     return None
