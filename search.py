@@ -3,7 +3,7 @@ import heapq
 def search(start, priority_function, heuristic_function):
     open_list = []
     closed_list = set()
-
+    expansions = 0
     g_values = {start: 0}
     f_values = {start: heuristic_function(start)}
 
@@ -15,6 +15,7 @@ def search(start, priority_function, heuristic_function):
         while f is not None:
             sol.append(f.get_state_as_list())
             f = f.get_father_state()
+        sol.reverse()
         return sol
 
 
@@ -22,11 +23,11 @@ def search(start, priority_function, heuristic_function):
         f_current, current = heapq.heappop(open_list)
 
         if current.is_goal():
-            return create_solution(current), current
+            return create_solution(current), expansions
 
         closed_list.add(current)
-
-        for neighbor in current.get_neighbors():
+        expansions+=1
+        for neighbor in current.get_neighbors():            
             tentative_g = g_values[current] + 1
 
             if neighbor in closed_list:
