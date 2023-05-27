@@ -27,10 +27,77 @@ class AdvanceHeuristic:
         self._n = n
         self._k = k
 
-    def get_h_value(self, state):
+    def get_h_value_temp(self, state):
+        k_start_index = 0
+        k_end_index = self._k-1
+        state_as_list = state.get_state_as_list()
         h = 0
-        # todo
+        for i, num in enumerate(state_as_list):
+            move_left_with_k = None
+            move_right_with_k = None
+            move_left = None
+            move_right = None
+
+            if num < i + 1:  # need go left
+                move_left = (i + 1) - num
+                move_right = (len(state_as_list) - 1) - i + num
+
+                # move left with k
+                if i in range(round(k_end_index/2),k_end_index + 1):
+                    new_index_after_flip = self._k - (i + 1)
+                    if new_index_after_flip >= num - 1:
+                        move_left_with_k = (new_index_after_flip + 1) - num + 1  # the last plus 1 is the k using 
+                    else:
+                        move_left_with_k = (num - 1) - new_index_after_flip + 1  # the last plus 1 is the k using 
+                elif i in range(round(k_end_index/2) + 1):
+                    move_left_with_k = move_left
+                else:
+                    move_left_with_k = (i - k_end_index) + 1 + (num - 1)
+                
+                # move right with k
+                if i in range(round(k_end_index/2),k_end_index + 1) or i > k_end_index:
+                    move_right_with_k = move_right
+                else:
+                    new_index_after_flip = self._k - i
+                    move_right_with_k = (len(state_as_list) - 1 - new_index_after_flip) - i + num + 1
+
+            elif num > i + 1:  # need to go right
+                move_left = (len(state_as_list) - 1) + i
+                move_right = num - 1
+
+                
+            
+            dis = min(move_left,
+                      move_right,
+                      move_left_with_k,
+                      move_right_with_k)
+            h = max(h, dis)
         return h
+    
+    def get_h_value(self, state):
+        # get current state as a list of integers
+        state_as_list = state.get_state_as_list()
+        
+        # calculate number of misplaced disks
+        misplaced_disks = 0
+        for i in range(self._n - self._k):
+            if state_as_list[i] != i + 1:
+                misplaced_disks += 1
+                
+        # calculate number of cycles
+        num_cycles = 0
+        visited = set()
+        for i in range(self._n):
+            if i not in visited:
+                visited.add(i)
+                j = state_as_list.index(i + 1)
+                while j != i:
+                    visited.add(j)
+                    j = state_as_list.index(j + 1)
+                num_cycles += 1
+        
+        # add up and return heuristic value
+        return max(misplaced_disks, num_cycles)
 
 
 class LearnedHeuristic:
