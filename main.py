@@ -1,6 +1,7 @@
 import random
+from heuristic_trainer import HeuristicTrainer
 
-from heuristics import BaseHeuristic, AdvanceHeuristic
+from heuristics import BaseHeuristic, AdvanceHeuristic, LearnedHeuristic
 from priorities import f_priority
 from search import search
 from topspin import TopSpinState
@@ -18,7 +19,7 @@ def timeit(func):
     return wrapper
 
 @timeit
-def search_with_time(start: TopSpinState, heuristic: any, priority: function, print_states: bool):
+def search_with_time(start: TopSpinState, heuristic: any, priority, print_states: bool):
     path, expansions = search(start, priority, heuristic.get_h_value)
     if path is not None:
         print(f'expansions: {expansions}')
@@ -35,15 +36,30 @@ easy_instance_start = TopSpinState(instance_1, 4)
 hard_instance_start = TopSpinState(instance_2, 4)
 base_heuristic = BaseHeuristic(11, 4)
 advanced_heuristic = AdvanceHeuristic(11, 4)
-    
-print("-------------easy instance base heuristic----------------")
-search_with_time(easy_instance_start, base_heuristic, f_priority, False)
 
-print("-------------easy instance advanced heuristic----------------")
-search_with_time(easy_instance_start, advanced_heuristic, f_priority, False)
+# check given instances with base and advanced heuristic    
+# print("-------------easy instance base heuristic----------------")
+# search_with_time(easy_instance_start, base_heuristic, f_priority, False)
 
-print("-------------hard instance base heuristic----------------")
-search_with_time(hard_instance_start, base_heuristic, f_priority, False)
+# print("-------------easy instance advanced heuristic----------------")
+# search_with_time(easy_instance_start, advanced_heuristic, f_priority, False)
 
-print("-------------hard instance advanced heuristic----------------")
-search_with_time(hard_instance_start, advanced_heuristic, f_priority, False)
+# print("-------------hard instance base heuristic----------------")
+# search_with_time(hard_instance_start, base_heuristic, f_priority, False)
+
+# print("-------------hard instance advanced heuristic----------------")
+# search_with_time(hard_instance_start, advanced_heuristic, f_priority, False)
+
+learned_heuristic = LearnedHeuristic(11, 4)
+heuristic_trainer = HeuristicTrainer(learned_heuristic)
+# train model
+# print("-------------training learned heuristic----------------")
+# heuristic_trainer.train(max_steps=1000, epochs=100)
+# learned_heuristic.save_model()
+
+# try model
+learned_heuristic.load_model()
+print("-------------easy instance learned heuristic----------------")
+search_with_time(easy_instance_start, learned_heuristic, f_priority, False)
+print("-------------hard instance learned heuristic----------------")
+search_with_time(hard_instance_start, learned_heuristic, f_priority, False)
