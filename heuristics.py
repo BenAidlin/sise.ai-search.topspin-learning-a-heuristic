@@ -27,6 +27,26 @@ class AdvanceHeuristic:
         self._n = n
         self._k = k
 
+    def get_h_value(self, state):
+        state_as_list = state.get_state_as_list()
+        gap = 0
+
+        if state_as_list[0] != 1:
+            gap = 1
+        
+        last_sub_series_len = 0
+        k = self._k
+        n = self._n
+        for i in range(len(state_as_list) - 1):
+            if abs(state_as_list[i] - state_as_list[i + 1]) != 1:
+                gap += 1
+                if last_sub_series_len < k or last_sub_series_len % k != 0 and last_sub_series_len != n - k:
+                    gap += 1
+                last_sub_series_len = 0
+            else:
+                last_sub_series_len += 1
+        return gap
+
     def get_h_value_temp(self, state):
         k_start_index = 0
         k_end_index = self._k-1
@@ -74,7 +94,7 @@ class AdvanceHeuristic:
             h = max(h, dis)
         return h
     
-    def get_h_value(self, state):
+    def get_h_value_temp2(self, state):
         # get current state as a list of integers
         state_as_list = state.get_state_as_list()
         
