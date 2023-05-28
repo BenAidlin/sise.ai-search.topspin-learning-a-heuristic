@@ -52,10 +52,11 @@ advanced_heuristic = AdvanceHeuristic(11, 4)
 
 learned_heuristic = LearnedHeuristic(11, 4)
 heuristic_trainer = HeuristicTrainer(learned_heuristic)
+
 # train model
-# print("-------------training learned heuristic----------------")
-# heuristic_trainer.train(max_steps=1000, epochs=100)
-# learned_heuristic.save_model()
+print("-------------training learned heuristic----------------")
+heuristic_trainer.train(max_steps=1000, epochs=100)
+learned_heuristic.save_model()
 
 # try model
 learned_heuristic.load_model()

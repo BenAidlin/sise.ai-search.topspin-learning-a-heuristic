@@ -133,7 +133,7 @@ class LearnedHeuristic:
         self._model.add(Dense(32, activation='relu'))
         self._model.add(Dropout(0.25))
         self._model.add(Dense(16, activation='relu'))
-        self._model.add(Dense(1, activation='linear'))
+        self._model.add(Dense(1, activation='sigmoid'))
 
         self._model.compile(loss='mse', optimizer='adam')
 

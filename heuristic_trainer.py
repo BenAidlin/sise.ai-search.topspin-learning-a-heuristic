@@ -8,16 +8,20 @@ class HeuristicTrainer:
         self._learned_heuristic = learned_heuristic
 
     def train(self, max_steps=10000, epochs=100):
-        training_data = []
-        labels = []
+        # initiate lists with goal and 0
+        training_data = [TopSpinState(list(range(1, self._learned_heuristic._n + 1)), self._learned_heuristic._k)]
+        labels = [0]
 
         for steps in range(1, max_steps + 1):
             state = self.generate_scrambled_state(steps)
             best_neighbor = self.find_best_neighbor(state)
-            label = 1 if best_neighbor.is_goal() else 1 + self._learned_heuristic.get_h_value(best_neighbor)
+            normalized_step_score = steps / max_steps
+            label = 0 if best_neighbor.is_goal() else normalized_step_score
 
             training_data.append(state)
             labels.append(label)
+            if(steps % 10 == 0):
+                print(f'step number {steps} finished')
 
         self._learned_heuristic.train_model(training_data, labels, epochs=epochs)
 
