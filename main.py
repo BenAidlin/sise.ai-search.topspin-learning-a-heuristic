@@ -23,9 +23,12 @@ def search_with_time(start: TopSpinState, heuristic: any, priority, print_states
     path, expansions = search(start, priority, heuristic.get_h_value)
     if path is not None:
         print(f'expansions: {expansions}')
-        if(print_states):
-            for vertex in path:
+        path_length = 0        
+        for vertex in path:
+            if(print_states):
                 print(vertex)
+            path_length+=1
+        print(f'path length: {path_length}')
     else:
         print("unsolvable")
 
