@@ -58,7 +58,9 @@ heuristic_trainer = HeuristicTrainer(learned_heuristic)
 
 # train model
 print("-------------training learned heuristic----------------")
-heuristic_trainer.train(max_steps=1000, epochs=100)
+for i in range(10):
+    print(f"-------------training number {i} done----------------")
+    heuristic_trainer.train(max_steps=1000, epochs=100)
 learned_heuristic.save_model()
 
 # try model
