@@ -120,8 +120,7 @@ class AdvanceHeuristic:
         return max(misplaced_disks, num_cycles)
 
 
-class LearnedHeuristic:
-
+class LearnedHeuristic:    
     def __init__(self, n=11, k=4):
         self._n = n
         self._k = k
@@ -129,9 +128,7 @@ class LearnedHeuristic:
 
         self._model = Sequential()
         self._model.add(Dense(64, activation='relu', input_shape=input_shape))
-        self._model.add(Dropout(0.25))
         self._model.add(Dense(32, activation='relu'))
-        self._model.add(Dropout(0.25))
         self._model.add(Dense(16, activation='relu'))
         self._model.add(Dense(1, activation='sigmoid'))
 
@@ -142,7 +139,8 @@ class LearnedHeuristic:
     def get_h_value(self, state):
         state = np.array(state.get_state_as_list())
         state = state.reshape(1, self._n)
-        return self._model.predict(state, verbose=0)[0][0]
+        predicted = self._model.predict(state, verbose=0)[0][0]        
+        return predicted * 1000
 
     def train_model(self, input_data, output_labels, epochs=100):
         input_as_list = [state.get_state_as_list() for state in input_data]
