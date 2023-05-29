@@ -14,9 +14,9 @@ class HeuristicTrainer:
 
         for steps in range(1, max_steps + 1):
             state = self.generate_scrambled_state(steps)
-            best_neighbor = self.find_best_neighbor(state)
+            # best_neighbor = self.find_best_neighbor(state)
             normalized_step_score = steps / max_steps
-            label = 0 if best_neighbor.is_goal() else normalized_step_score
+            label = 0 if state.is_goal() else normalized_step_score
 
             training_data.append(state)
             labels.append(label)
