@@ -37,4 +37,4 @@ def search(start, priority_function, heuristic_function):
                 g_values[neighbor] = tentative_g
                 f_values[neighbor] = priority_function(tentative_g, heuristic_function(neighbor))
                 heapq.heappush(open_list, (f_values[neighbor], neighbor))                
-    return None
+    return (None, None)
