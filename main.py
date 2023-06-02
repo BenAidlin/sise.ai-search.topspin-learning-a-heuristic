@@ -47,35 +47,39 @@ def generate_scrambled_state() -> TopSpinState:
     
 
 
-def train_learned_heuristic(learned_heuristic: LearnedHeuristic, times: int, max_steps: int, epochs: int):
+def train_learned_heuristic(learned_heuristic: LearnedHeuristic, times: int, epochs: int):
+    # max steps that heuristic trainer will do now defined as static member inside heuristic trainer
     heuristic_trainer = HeuristicTrainer(learned_heuristic) 
     # train model
     print("-------------training learned heuristic----------------")
     for i in range(times):
         print(f"-------------training number {i} done----------------")
-        heuristic_trainer.train(max_steps=max_steps, epochs=epochs)
+        heuristic_trainer.train(epochs=epochs)
     learned_heuristic.save_model()
 
 
 if training_needed:
-    train_learned_heuristic(learned_heuristic, 100, 1000, 100)
+    train_learned_heuristic(learned_heuristic, 100, 100)
 
 
-priorities = [('A*', f_priority), ('GBFS', h_priority), ('WA*', fw_priority)]
-heuristics = [('advanced', advanced_heuristic), ('basic', base_heuristic), ('learned', learned_heuristic),]
+priorities = [('WA*', fw_priority)]
+heuristics = [('learned', learned_heuristic),]
 instances = [generate_scrambled_state() for _ in range(instances_to_run)]
 
 print(f'running {instances_to_run} of each variation')
+
 for heuristic in heuristics:        
     for priority in priorities:        
         priority_heuristic_results = []
         for instance in enumerate(instances):
             print(f'running {priority[0]} with {heuristic[0]} and instance number {instance[0]}')
             priority_heuristic_results.append(search_and_record_performance(instance[1], heuristic[1], priority[1], False))
-        runtime_results = [sr.runtime for sr in priority_heuristic_results if sr is not None] 
-        path_length_results = [sr.path_length for sr in priority_heuristic_results if sr is not None] 
-        expansions_results = [sr.expansions for sr in priority_heuristic_results if sr is not None] 
-        print(f'{priority[0]} with {heuristic[0]} resulted in ' + 
-              f'avg runtime: {sum(runtime_results) / len(runtime_results)},' + 
-              f'avg path_length: {sum(path_length_results) / len(path_length_results)},' + 
-              f'avg expansions: {sum(expansions_results) / len(expansions_results)}')
+            
+            runtime_results = [sr.runtime for sr in priority_heuristic_results if sr is not None] 
+            path_length_results = [sr.path_length for sr in priority_heuristic_results if sr is not None] 
+            expansions_results = [sr.expansions for sr in priority_heuristic_results if sr is not None] 
+            with open('./models/results.txt', 'w') as f:
+                f.write(f'{priority[0]} with {heuristic[0]} resulted in ' + 
+                    f'avg runtime: {sum(runtime_results) / len(runtime_results)},' + 
+                    f'avg path_length: {sum(path_length_results) / len(path_length_results)},' + 
+                    f'avg expansions: {sum(expansions_results) / len(expansions_results)}')

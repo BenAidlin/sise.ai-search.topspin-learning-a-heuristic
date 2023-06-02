@@ -1,5 +1,6 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
+from heuristic_trainer import HeuristicTrainer
 import numpy as np
 
 
@@ -140,7 +141,7 @@ class LearnedHeuristic:
         state = np.array(state.get_state_as_list())
         state = state.reshape(1, self._n)
         predicted = self._model.predict(state, verbose=0)[0][0]        
-        return predicted * 1000
+        return predicted * HeuristicTrainer.max_steps
 
     def train_model(self, input_data, output_labels, epochs=100):
         input_as_list = [state.get_state_as_list() for state in input_data]

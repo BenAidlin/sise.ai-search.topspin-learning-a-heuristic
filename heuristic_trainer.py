@@ -4,17 +4,20 @@ import random
 from topspin import TopSpinState
 
 class HeuristicTrainer:
+    # static member of heuristic trainer    
+    max_steps = 1000
+
     def __init__(self, learned_heuristic):
         self._learned_heuristic = learned_heuristic
 
-    def train(self, max_steps=10000, epochs=100):
+    def train(self, epochs=100):
         # initiate lists with goal and 0
         training_data = [TopSpinState(list(range(1, self._learned_heuristic._n + 1)), self._learned_heuristic._k)]
         labels = [0]
 
-        for steps in range(1, max_steps + 1):
+        for steps in range(1, HeuristicTrainer.max_steps + 1):
             state = self.generate_scrambled_state(steps)
-            normalized_step_score = steps / max_steps
+            normalized_step_score = steps / HeuristicTrainer.max_steps
             label = 0 if state.is_goal() else normalized_step_score
 
             training_data.append(state)
@@ -28,4 +31,4 @@ class HeuristicTrainer:
         state = TopSpinState(list(range(1, self._learned_heuristic._n + 1)), self._learned_heuristic._k)
         for _ in range(steps):
             state = random.choice(state.get_neighbors())
-        return state
+        return state    
