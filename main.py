@@ -62,8 +62,8 @@ if training_needed:
     train_learned_heuristic(learned_heuristic, 100, 100)
 
 
-priorities = [('WA*', fw_priority)]
-heuristics = [('learned', learned_heuristic),]
+priorities = [('A*', f_priority), ('GBFS', h_priority), ('WA*', fw_priority)]
+heuristics = [('advanced', advanced_heuristic), ('basic', base_heuristic), ('learned', learned_heuristic),]
 instances = [generate_scrambled_state() for _ in range(instances_to_run)]
 
 print(f'running {instances_to_run} of each variation')
@@ -74,12 +74,12 @@ for heuristic in heuristics:
         for instance in enumerate(instances):
             print(f'running {priority[0]} with {heuristic[0]} and instance number {instance[0]}')
             priority_heuristic_results.append(search_and_record_performance(instance[1], heuristic[1], priority[1], False))
-            
-            runtime_results = [sr.runtime for sr in priority_heuristic_results if sr is not None] 
-            path_length_results = [sr.path_length for sr in priority_heuristic_results if sr is not None] 
-            expansions_results = [sr.expansions for sr in priority_heuristic_results if sr is not None] 
-            with open('./models/results.txt', 'w') as f:
-                f.write(f'{priority[0]} with {heuristic[0]} resulted in ' + 
-                    f'avg runtime: {sum(runtime_results) / len(runtime_results)},' + 
-                    f'avg path_length: {sum(path_length_results) / len(path_length_results)},' + 
-                    f'avg expansions: {sum(expansions_results) / len(expansions_results)}')
+        
+        runtime_results = [sr.runtime for sr in priority_heuristic_results if sr is not None] 
+        path_length_results = [sr.path_length for sr in priority_heuristic_results if sr is not None] 
+        expansions_results = [sr.expansions for sr in priority_heuristic_results if sr is not None] 
+        with open('./models/results.txt', 'w') as f:
+            f.write(f'{priority[0]} with {heuristic[0]} resulted in ' + 
+                f'avg runtime: {sum(runtime_results) / len(runtime_results)},' + 
+                f'avg path_length: {sum(path_length_results) / len(path_length_results)},' + 
+                f'avg expansions: {sum(expansions_results) / len(expansions_results)}')
